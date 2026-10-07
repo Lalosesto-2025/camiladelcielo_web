@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2>Bandeja de Mensajes Privados 📬</h2>
+        <a href="{{ url_for('logout') }}" style="background: #EF4444; color: white; padding: 0.5rem 1.2rem; border-radius: 20px; text-decoration: none; font-weight: 600;">Cerrar Sesión</a>
+    </div>
+
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Mensajes recibidos desde la sección de contacto.</p>
+
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        {% for msg in mensajes %}
+        <div class="card" style="padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <h3 style="color: var(--primary-color); margin: 0;">{{ msg.nombre_remitente }}</h3>
+                <small style="color: var(--text-muted);">{{ msg.fecha }}</small>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--accent-color); font-weight: 600; margin-bottom: 1rem;">
+                📧 {{ msg.correo }}
+            </p>
+            <p style="background: #F9FAFB; padding: 1rem; border-radius: 10px; color: var(--text-color);">
+                {{ msg.mensaje }}
+            </p>
+        </div>
+        {% else %}
+        <div class="card" style="padding: 2rem; text-align: center;">
+            <p>No tienes mensajes guardados por el momento. ✨</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

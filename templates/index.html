@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero">
+    <h1>¡Hola, bienvenido a mi sitio web! 👋</h1>
+    <!-- Foto de Camila centrada -->
+    <div class="profile-avatar-container">
+        <img src="{{ url_for('static', filename='img/camila.png') }}" 
+            alt="{{ perfil.nombre_completo if perfil else 'Camila del Cielo' }}" 
+            class="profile-avatar">
+    </div>
+    <p>{% if perfil %}{{ perfil.titulo_subtitulo }}{% else %}Estudiante • Creadora Digital{% endif %}</p>
+</section>
+
+<!-- Dashboard Estadístico -->
+<h2 style="text-align: center; margin-bottom: 1rem;">Mi Mundo en Números 📊</h2>
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number" data-target="{{ total_proyectos if total_proyectos is defined else (perfil.proyectos_completados if perfil else 0) }}">0</div>
+        <div class="stat-label">Proyectos Creados</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number" data-target="{{ perfil.libros_leidos if perfil else 0 }}">0</div>
+        <div class="stat-label">Libros Leídos este Año</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number" data-target="{{ perfil.horas_codigo if perfil else 0 }}">0</div>
+        <div class="stat-label">Horas de Aprendizaje</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number" data-target="{{ perfil.logros_obtenidos if perfil else 0 }}">0</div>
+        <div class="stat-label">Logros Escolares</div>
+    </div>
+</div>
+
+<!-- Sobre Mí -->
+<section style="background: white; padding: 2rem; border-radius: 16px; margin: 2.5rem 0; box-shadow: var(--shadow);">
+    <h2>Sobre Mí ✨</h2>
+    <p style="margin-top: 0.8rem; font-size: 1.05rem; color: #444;">
+        {% if perfil %}{{ perfil.bio }}{% else %}¡Hola! Bienvenidos a mi sitio web oficial donde comparto mis proyectos y pasatiempos.{% endif %}
+    </p>
+</section>
+
+<!-- Creaciones Destacadas -->
+<section>
+    <h2>Creaciones Recientes 🎨</h2>
+    <div class="grid">
+        {% for proyecto in proyectos %}
+        <div class="card">
+            <img src="{{ proyecto.imagen_url }}" class="card-img" alt="{{ proyecto.titulo }}">
+            <div class="card-body">
+                <span class="badge">{{ proyecto.categoria }}</span>
+                <h3 class="card-title">{{ proyecto.titulo }}</h3>
+                <p class="card-text">{{ proyecto.descripcion }}</p>
+                <div class="card-footer">
+                    <button class="like-btn" data-id="{{ proyecto.id }}">
+                        ❤️ <span class="like-count">{{ proyecto.likes }}</span>
+                    </button>
+                    <small style="color: var(--text-muted);">{{ proyecto.fecha_publicacion }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

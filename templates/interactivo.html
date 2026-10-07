@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section style="text-align: center;">
+    <h2>Rincón Interactivo 🎮</h2>
+    <p style="color: var(--text-muted);">¡Pon a prueba tu memoria con este divertido minijuego!</p>
+
+    <div class="game-board" id="board"></div>
+    <div id="game-status" style="font-weight: bold; margin-top: 1rem; font-size: 1.2rem; min-height: 1.8rem;"></div>
+
+    <!-- Tabla de Clasificación -->
+    <div style="background: white; padding: 2rem; border-radius: 16px; margin-top: 3rem; box-shadow: var(--shadow); max-width: 500px; margin-left: auto; margin-right: auto;">
+        <h3>🏆 Mejores Puntajes</h3>
+        <ul style="list-style: none; margin-top: 1rem; text-align: left;">
+            {% for p in puntajes %}
+            <li style="padding: 0.6rem 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                <span><strong>{{ p.jugador }}</strong></span>
+                <span style="color: var(--primary); font-weight: bold;">{{ p.puntaje }} pts</span>
+            </li>
+            {% else %}
+            <li>¡Sé el primero en jugar y registrar tu puntaje!</li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const emojis = ['🚀', '🚀', '🎨', '🎨', '📚', '📚', '⭐', '⭐'];
+let shuffled = emojis.sort(() => 0.5 - Math.random());
+let selected = [];
+let matchedCount = 0;
+let moves = 0;
+
+const board = document.getElementById('board');
+shuffled.forEach((emoji, idx) => {
+    const card = document.createElement('div');
+    card.classList.add('memory-card');
+    card.dataset.emoji = emoji;
+    card.dataset.index = idx;
+    card.innerText = '❓';
+    card.addEventListener('click', flipCard);
+    board.appendChild(card);
+});
+
+function flipCard() {
+    if (selected.length < 2 && !this.classList.contains('flipped')) {
+        this.classList.add('flipped');
+        this.innerText = this.dataset.emoji;
+        selected.push(this);
+
+        if (selected.length === 2) {
+            moves++;
+            if (selected[0].dataset.emoji === selected[1].dataset.emoji) {
+                matchedCount += 2;
+                selected = [];
+                if (matchedCount === emojis.length) {
+                    const finalScore = Math.max(10, 100 - (moves * 10));
+                    document.getElementById('game-status').innerText = `¡Felicidades! Ganaste en ${moves} intentos. Puntaje: ${finalScore}`;
+                    
+                    const nombre = prompt("¡Genial! Ingresa tu nombre para guardar tu puntaje:") || "Invitado";
+                    fetch('/guardar_puntaje', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({jugador: nombre, puntaje: finalScore})
+                    }).then(() => location.reload());
+                }
+            } else {
+                setTimeout(() => {
+                    selected.forEach(c => {
+                        c.classList.remove('flipped');
+                        c.innerText = '❓';
+                    });
+                    selected = [];
+                }, 800);
+            }
+        }
+    }
+}
+</script>
+{% endblock %}

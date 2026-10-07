@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camila del Cielo | Sitio Oficial</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Camila del Cielo ✨</div>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Inicio</a></li>
+                <li><a href="{{ url_for('proyectos') }}">Mis Creaciones</a></li>
+                <li><a href="{{ url_for('interactivo') }}">Rincón Interactivo</a></li>
+                <li><a href="{{ url_for('libro_visitas') }}">Libro de Visitas</a></li>
+                <li><a href="{{ url_for('contacto') }}">Contacto</a></li>
+                
+                <!-- Botón de Acceso / Panel para Camila -->
+                {% if session.get('admin_logged_in') %}
+                    <li><a href="{{ url_for('admin_dashboard') }}" class="admin-link">👑 Panel</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}" class="admin-link">🔒 Admin</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div style="padding: 1rem; margin-bottom: 1.5rem; border-radius: 12px; background: #e8f5e9; color: #2e7d32; font-weight: bold; text-align: center;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Reproductor de Audio Flotante con Playlist -->
+    <div class="music-player">
+        <button id="music-toggle" class="music-btn">🎵</button>
+        
+        <div class="music-controls" style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 0.75rem; font-weight: 600; opacity: 0.8;">Música de fondo</span>
+            <select id="music-select" style="font-size: 0.8rem; padding: 2px 5px; border-radius: 8px; border: 1px solid #ccc; outline: none; cursor: pointer;">
+                <option value="{{ url_for('static', filename='audio/santosbravos.mp3') }}">Santos Bravos 🎶</option>
+                <option value="{{ url_for('static', filename='audio/sabrina.mp3') }}">Canción Favorita 2 ✨</option>
+                <option value="{{ url_for('static', filename='audio/relax.mp3') }}">Música Relax 🌿</option>
+                <option value="{{ url_for('static', filename='audio/katseye.mp3') }}">katseye 🎶</option>
+            </select>
+        </div>
+
+        <audio id="bg-music" loop src="{{ url_for('static', filename='audio/santosbravos.mp3') }}"></audio>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Camila del Cielo Salas Polo | Innova Schools</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

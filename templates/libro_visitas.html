@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="form-container">
+    <h2 style="text-align: center; margin-bottom: 0.5rem;">Libro de Visitas 📖</h2>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">¡Deja un saludo o mensaje público para Camila!</p>
+
+    <form action="{{ url_for('libro_visitas') }}" method="POST">
+        <div class="form-group">
+            <label>Tu Nombre:</label>
+            <input type="text" name="nombre" class="form-control" placeholder="Escribe tu nombre" required>
+        </div>
+        <div class="form-group">
+            <label>Tu Saludo o Mensaje:</label>
+            <textarea name="mensaje" class="form-control" rows="3" placeholder="¡Escribe algo lindo!" required></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Publicar Mensaje ✨</button>
+    </form>
+
+    <hr style="margin: 2.5rem 0; border: None; border-top: 1px solid #eee;">
+
+    <h3>Comentarios Recientes 👇</h3>
+    <div style="margin-top: 1.5rem;">
+        {% for c in comentarios %}
+        <div style="background: #f8f9fa; padding: 1.2rem; border-radius: 12px; margin-bottom: 1rem; border-left: 4px solid var(--primary);">
+            <strong>{{ c.nombre_autor }}</strong>
+            <p style="margin-top: 0.4rem; color: #444;">{{ c.mensaje }}</p>
+            <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">{{ c.fecha }}</small>
+        </div>
+        {% else %}
+        <p style="color: var(--text-muted);">Aún no hay mensajes. ¡Sé el primero en escribir!</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

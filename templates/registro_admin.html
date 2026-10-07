@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <div class="form-container" style="max-width: 450px;">
+        <h2>Crear Cuenta de Administradora 👑</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Registra tu usuario y contraseña privada para administrar tu web.</p>
+
+        <form action="{{ url_for('registro_admin') }}" method="POST">
+            <div class="form-group">
+                <label>Usuario Administrador:</label>
+                <input type="text" name="usuario" class="form-control" placeholder="Ej: camila" required>
+            </div>
+            <div class="form-group">
+                <label>Contraseña Privada:</label>
+                <input type="password" name="password" class="form-control" placeholder="Crea una contraseña segura" required>
+            </div>
+            <button type="submit" class="btn-submit">Guardar Credenciales ✨</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
